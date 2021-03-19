@@ -19,19 +19,19 @@ namespace GestioneTask
 
         public LivelloImportanza Importanza { get; }
 
-        private int _id;
+        public int ID { get; }
 
         public Task(string descrizione, DateTime dataScadenza, LivelloImportanza importanza, int id)
         {
             Descrizione = descrizione;
             DataScadenza = dataScadenza;
             Importanza = importanza;
-            _id = id;
+            ID = id;
         }
 
         public string Info()
         {
-            return $"Descrizione: {Descrizione}; Data Scadenza: {DataScadenza.Date}; Livello di importanza: {Importanza}";
+            return $"Descrizione: {Descrizione}; Data Scadenza: {DataScadenza.ToShortDateString()}; Livello di importanza: {Importanza}";
         }
 
     }

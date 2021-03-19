@@ -12,7 +12,7 @@ namespace GestioneTask
         {
             Console.WriteLine("Benvenuto nel tuo Task Manager!");
             Console.WriteLine();
-           
+
             do
             {
                 Console.WriteLine();
@@ -23,7 +23,7 @@ namespace GestioneTask
                 Console.WriteLine("5. Salva");
                 Console.WriteLine("0. Esci");
 
-                switch(Console.ReadKey().KeyChar)
+                switch (Console.ReadKey().KeyChar)
                 {
                     case '1':
                         Console.WriteLine();
@@ -60,7 +60,7 @@ namespace GestioneTask
         private static void Salva()
         {
             const string fileName = @"agenda.txt"; // nome del file
-           
+
             using (StreamWriter sw = new StreamWriter(fileName))
                 sw.WriteLine(agenda.VisualizzaTask(Filtri.Nessuno));
             Console.WriteLine("Salvataggio avvenuto correttamente.");
@@ -68,9 +68,6 @@ namespace GestioneTask
 
         private static void Filtra()
         {
-
-            bool controllo = false;
-            
             do
             {
                 Console.WriteLine("Filtra per: \n 1. Livello di importanza Basso" +
@@ -79,17 +76,15 @@ namespace GestioneTask
                                               "\n 4. Visualizza tutti");
                 switch (Console.ReadKey().KeyChar)
                 {
-                    case '1': Console.WriteLine(agenda.VisualizzaTask(Filtri.Basso)); controllo = true; break;
-                    case '2': Console.WriteLine(agenda.VisualizzaTask(Filtri.Medio)); controllo = true; break;
-                    case '3': Console.WriteLine(agenda.VisualizzaTask(Filtri.Alto)); controllo = true; break;
-                    case '4': Console.WriteLine(agenda.VisualizzaTask(Filtri.Nessuno)); controllo = true; break;
+                    case '1': Console.WriteLine(agenda.VisualizzaTask(Filtri.Basso)); return;
+                    case '2': Console.WriteLine(agenda.VisualizzaTask(Filtri.Medio)); return;
+                    case '3': Console.WriteLine(agenda.VisualizzaTask(Filtri.Alto)); return;
+                    case '4': Console.WriteLine(agenda.VisualizzaTask(Filtri.Nessuno)); return;
                     default:
                         Console.WriteLine("\nCarattere inserito non valido. Riprova");
                         break;
                 }
-            } while (!controllo);
-           
-            
+            } while (true);
         }
 
         private static void VisualizzaTask()
@@ -122,53 +117,37 @@ namespace GestioneTask
         // e che si appoggia alla classe TaskManager per inserire un nuovo task in agenda
         private static void AggiungiTask()
         {
+            // decisione di non effettuare alcun controllo sulla descrizione
             Console.WriteLine("Attribuisci una descrizione al tuo task: ");
             string descrizione = Console.ReadLine();
 
-            int giorno;
-            int mese;
-            int anno;
-            Console.WriteLine("Inserire data di scadenza.");
+            DateTime scadenza;
             do
             {
-                Console.WriteLine("Inserisci giorno (dd): ");
-            } while (!int.TryParse(Console.ReadLine(), out giorno));
-            do
-            {
-                Console.WriteLine("Inserisci mese (m opp. mm): ");
-            } while (!int.TryParse(Console.ReadLine(), out mese));
-            do
-            {
-                Console.WriteLine("Inserisci anno (aaaa): ");
-            } while (!int.TryParse(Console.ReadLine(), out anno));
+                Console.WriteLine("Inserisci la data di scadenza: ");
+            } while (!DateTime.TryParse(Console.ReadLine(), out scadenza) || scadenza < DateTime.Today);
 
-            // se la data inserita è valida, procedo con la richiesta di info all'utente
-            if (agenda.ControllaData(giorno, mese, anno))
+            bool controllo = false;
+            LivelloImportanza livelloImportanza;
+            do
             {
-                DateTime scadenza = new DateTime(anno, mese, giorno);
-                bool controllo = false;
-                LivelloImportanza livelloImportanza;
-                do
+                Console.WriteLine("Imposta un livello di difficolta (b/m/a)");
+                switch (Console.ReadKey().Key)
                 {
-                    Console.WriteLine("Imposta un livello di difficolta (b/m/a)");
-                    switch (Console.ReadKey().Key)
-                    {
-                        case ConsoleKey.B: livelloImportanza = LivelloImportanza.Basso; controllo = true; break;
-                        case ConsoleKey.M: livelloImportanza = LivelloImportanza.Medio; controllo = true; break;
-                        case ConsoleKey.A: livelloImportanza = LivelloImportanza.Alto; controllo = true; break;
-                        default:
-                            livelloImportanza = LivelloImportanza.Basso; // assegno valore arbitrario
-                            Console.WriteLine("\nCarattere inserito non valido. Riprova");
-                            break;
-                    }
-                } while (!controllo);
+                    case ConsoleKey.B: livelloImportanza = LivelloImportanza.Basso; controllo = true; break;
+                    case ConsoleKey.M: livelloImportanza = LivelloImportanza.Medio; controllo = true; break;
+                    case ConsoleKey.A: livelloImportanza = LivelloImportanza.Alto; controllo = true; break;
+                    default:
+                        livelloImportanza = LivelloImportanza.Basso; // assegno valore arbitrario
+                        Console.WriteLine("\nCarattere inserito non valido. Riprova");
+                        break;
+                }
+            } while (!controllo);
 
-                agenda.AggiungiTask(descrizione, scadenza, livelloImportanza);
+            Task t = agenda.AggiungiTask(descrizione, scadenza, livelloImportanza);
 
-                Console.WriteLine("\nTask aggiunto correttamente alla tua agenda");
-            }
-            else
-                Console.WriteLine("Data inserita non valida");
+            Console.WriteLine($"\nTask n° {t.ID} aggiunto correttamente alla tua agenda");
+
 
         }
     }

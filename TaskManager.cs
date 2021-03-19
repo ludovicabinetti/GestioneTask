@@ -11,36 +11,19 @@ namespace GestioneTask
         Medio,
         Alto,
         Nessuno
-
     }
     class TaskManager
     {
         private int _id = 0;
 
-
-
         private Dictionary<int, Task> _agenda = new Dictionary<int, Task>();
-
-        // controllo (molto brutale) della data
-        public bool ControllaData(int giorno, int mese, int anno)
-        {   
-            if (mese > 0 && mese <= 12)
-                if (giorno > 0 && giorno < DateTime.DaysInMonth(anno, mese))
-                {
-                    DateTime scadenza = new DateTime(anno, mese, giorno);
-                    if (DateTime.Today <= scadenza)
-                        return true;
-                }
-
-            return false;
-                    
-        }
        
-        public void AggiungiTask(string descrizione, DateTime dataScadenza, LivelloImportanza livelloImportanza)
+        public Task AggiungiTask(string descrizione, DateTime dataScadenza, LivelloImportanza livelloImportanza)
         {
 
-            int id = ++_id; // assegno un id al task
-            _agenda.Add(id, new Task(descrizione, dataScadenza, livelloImportanza, id)); // lo inserisco in agenda
+            _agenda.Add(++_id, new Task(descrizione, dataScadenza, livelloImportanza, _id)); // lo inserisco in agenda
+
+            return _agenda[_id];
         }
         public string VisualizzaTask(Filtri f)
         {
@@ -72,7 +55,6 @@ namespace GestioneTask
             return s;
 
         }
-
         public Boolean Esiste(int id)
         {
             return _agenda.ContainsKey(id);
