@@ -31,7 +31,7 @@ namespace GestioneTask
 
         public string Info()
         {
-            return $"Descrizione: {Descrizione}; Data Scadenza: {DataScadenza}; Livello di importanza: {Importanza}";
+            return $"Descrizione: {Descrizione}; Data Scadenza: {DataScadenza.Date}; Livello di importanza: {Importanza}";
         }
 
     }

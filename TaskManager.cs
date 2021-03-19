@@ -21,6 +21,7 @@ namespace GestioneTask
 
         private Dictionary<int, Task> _agenda = new Dictionary<int, Task>();
 
+        // controllo (molto brutale) della data
         public bool ControllaData(int giorno, int mese, int anno)
         {   
             if (mese > 0 && mese <= 12)
@@ -34,20 +35,7 @@ namespace GestioneTask
             return false;
                     
         }
-        //public bool ControllaData(DateTime scadenza)
-        //{
-        //    if (DateTime.Today >= scadenza)
-        //        return true;
-        //    return false;
-        //}
-
-        //public bool ControllaData(DateTime scadenza)
-        //{
-        //    if (scadenza.Day > 0 && scadenza.Day < DateTime.DaysInMonth(scadenza.Year, scadenza.Month))
-        //        return true;
-        //    return false;
-        //}
-
+       
         public void AggiungiTask(string descrizione, DateTime dataScadenza, LivelloImportanza livelloImportanza)
         {
 

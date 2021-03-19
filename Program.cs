@@ -113,6 +113,8 @@ namespace GestioneTask
                 agenda.RimuoviTask(id);
                 Console.WriteLine("Task eliminato correttamente");
             }
+            else
+                Console.WriteLine("Task inesistente.");
 
         }
 
@@ -133,7 +135,7 @@ namespace GestioneTask
             } while (!int.TryParse(Console.ReadLine(), out giorno));
             do
             {
-                Console.WriteLine("Inserisci mese (es. 6, 10): ");
+                Console.WriteLine("Inserisci mese (m opp. mm): ");
             } while (!int.TryParse(Console.ReadLine(), out mese));
             do
             {
