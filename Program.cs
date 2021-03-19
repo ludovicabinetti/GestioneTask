@@ -63,7 +63,7 @@ namespace GestioneTask
            
             using (StreamWriter sw = new StreamWriter(fileName))
                 sw.WriteLine(agenda.VisualizzaTask(Filtri.Nessuno));
-            Console.WriteLine("Salvataggio avvenuto correttamente.")
+            Console.WriteLine("Salvataggio avvenuto correttamente.");
         }
 
         private static void Filtra()
@@ -123,36 +123,40 @@ namespace GestioneTask
             Console.WriteLine("Attribuisci una descrizione al tuo task: ");
             string descrizione = Console.ReadLine();
 
-            DateTime scadenza;
-            string dateInput;
+            int giorno;
+            int mese;
+            int anno;
+            Console.WriteLine("Inserire data di scadenza.");
             do
             {
-                Console.WriteLine("Inserisci la data di scadenza (gg/mm/aaaa): ");
-                dateInput = Console.ReadLine();
-                //dateInput.Trim('/')
-                // imposto orario senza chiederlo all'utente
-                dateInput += " 00:00:00";
-            // se la dataInput è valida in termini di corrispondenza giorno/mese/anno
-            // il TryParse me lo converte in DateTime
-            } while (DateTime.TryParse(dateInput, out scadenza));
-
-            // se la data inserita è valida (successiva o uguale al giorno corrente),
-            // procedo con la richiesta di info all'utente
-            if(agenda.ControllaData(scadenza))
+                Console.WriteLine("Inserisci giorno (dd): ");
+            } while (!int.TryParse(Console.ReadLine(), out giorno));
+            do
             {
+                Console.WriteLine("Inserisci mese (es. 6, 10): ");
+            } while (!int.TryParse(Console.ReadLine(), out mese));
+            do
+            {
+                Console.WriteLine("Inserisci anno (aaaa): ");
+            } while (!int.TryParse(Console.ReadLine(), out anno));
+
+            // se la data inserita è valida, procedo con la richiesta di info all'utente
+            if (agenda.ControllaData(giorno, mese, anno))
+            {
+                DateTime scadenza = new DateTime(anno, mese, giorno);
                 bool controllo = false;
                 LivelloImportanza livelloImportanza;
                 do
                 {
                     Console.WriteLine("Imposta un livello di difficolta (b/m/a)");
-                    switch(Console.ReadKey().Key)
+                    switch (Console.ReadKey().Key)
                     {
-                        case ConsoleKey.F: livelloImportanza = LivelloImportanza.Basso; controllo = true;  break;
-                        case ConsoleKey.M: livelloImportanza = LivelloImportanza.Medio; controllo = true;  break;
-                        case ConsoleKey.D: livelloImportanza = LivelloImportanza.Alto; controllo = true; break;
-                        default: 
+                        case ConsoleKey.B: livelloImportanza = LivelloImportanza.Basso; controllo = true; break;
+                        case ConsoleKey.M: livelloImportanza = LivelloImportanza.Medio; controllo = true; break;
+                        case ConsoleKey.A: livelloImportanza = LivelloImportanza.Alto; controllo = true; break;
+                        default:
                             livelloImportanza = LivelloImportanza.Basso; // assegno valore arbitrario
-                            Console.WriteLine("\nCarattere inserito non valido. Riprova"); 
+                            Console.WriteLine("\nCarattere inserito non valido. Riprova");
                             break;
                     }
                 } while (!controllo);
@@ -161,7 +165,8 @@ namespace GestioneTask
 
                 Console.WriteLine("\nTask aggiunto correttamente alla tua agenda");
             }
-            
+            else
+                Console.WriteLine("Data inserita non valida");
 
         }
     }
